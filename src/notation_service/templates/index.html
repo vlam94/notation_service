@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Colinha converter</h1>
+<p>Choose the score you exported from MuseScore and press <strong>Convert</strong>.</p>
+
+<form method="post" enctype="multipart/form-data">
+  <label for="score">Score file</label>
+  <input type="file" id="score" name="score" accept=".musicxml,.xml,.mxl"
+         {% if error %}aria-invalid="true" aria-describedby="score-error"{% endif %}>
+  {% if error %}<p id="score-error" class="error" role="alert">{{ error }}</p>{% endif %}
+
+  <button type="submit">Convert</button>
+
+  <details {% if error or parts|length > 1 %}open{% endif %}>
+    <summary>Options</summary>
+    <fieldset>
+      <legend>Notation</legend>
+      {% for key, dialect in dialects.items() %}
+      <label>
+        <input type="radio" name="dialect" value="{{ key }}" {% if key == choices.dialect %}checked{% endif %}>
+        {{ dialect.label }}
+      </label>
+      {% endfor %}
+    </fieldset>
+
+    <label for="octave">Base octave</label>
+    <select id="octave" name="octave">
+      <option value="{{ automatic }}">Automatic (lowest note)</option>
+      {% for octave in octaves %}
+      <option value="{{ octave }}" {% if octave|string == choices.octave %}selected{% endif %}>{{ octave }}</option>
+      {% endfor %}
+    </select>
+
+    {% if parts|length > 1 %}
+    <label for="part">Instrument</label>
+    <select id="part" name="part">
+      {% for part in parts %}
+      <option value="{{ loop.index0 }}" {% if loop.index0|string == choices.part %}selected{% endif %}>{{ part.name }}</option>
+      {% endfor %}
+    </select>
+    <small>To convert another instrument, choose it here and the file again, then press Convert.</small>
+    {% else %}
+    <input type="hidden" name="part" value="{{ choices.part }}">
+    {% endif %}
+  </details>
+</form>
+
+{% if result %}
+<section>
+  <h2>{{ result.filename }}{% if parts|length > 1 %} — {{ result.instrument }}{% endif %}</h2>
+  <pre id="colinha">{{ result.colinha }}</pre>
+  <div class="actions">
+    <button type="button" id="copy" hidden>Copy</button>
+    <a role="button" download="{{ result.download_name }}"
+       href="data:text/plain;charset=utf-8,{{ result.colinha|urlencode }}">Download .txt</a>
+  </div>
+</section>
+<script>
+  (function () {
+    var button = document.getElementById("copy");
+    if (!navigator.clipboard) return;
+    button.hidden = false;
+    button.addEventListener("click", function () {
+      navigator.clipboard.writeText(document.getElementById("colinha").textContent).then(function () {
+        button.textContent = "Copied";
+      });
+    });
+  })();
+</script>
+{% endif %}
+{% endblock %}

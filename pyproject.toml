@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "notation_service"
+version = "0.1.0"
+description = "Converts a MusicXML score into a colinha."
+requires-python = ">=3.12"
+dependencies = [
+    "flask>=3.1",
+    "music21>=9.1",
+    "waitress>=3.0",
+    "platformdirs>=4.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.6", "mypy>=1.11", "types-waitress"]
+build = ["pyinstaller>=6"]
+
+[project.scripts]
+notation-service-server = "notation_service.server:main"
+
+[project.gui-scripts]
+notation-service = "notation_service.launcher:main"
+
+[tool.setuptools.package-data]
+notation_service = ["templates/*.html", "static/*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "BLE", "SIM", "RUF", "PT", "PTH", "T20"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers"
+
+[tool.coverage.run]
+source = ["notation_service"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
