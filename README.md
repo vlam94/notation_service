@@ -5,11 +5,27 @@ measure.
 
 ## Install (Windows)
 
-1. Download `notation_service-setup.exe`.
-2. Double-click it. Windows may say *"Windows protected your PC"* — this is because the installer
-   is not signed. Click **More info**, then **Run anyway**.
+### Download the installer
+
+1. Go to the [GitHub Actions runs](https://github.com/vlam94/notation_service/actions) page.
+2. Click on the most recent successful run (look for a green checkmark) titled "CI".
+3. Scroll down to the **Artifacts** section and click **notation_service-setup** to download
+   `notation_service-setup.exe`.
+
+   Alternatively, to get the latest build from a specific branch or commit:
+   - Find the run in the Actions list
+   - Look for its **name** in the workflow run title (shows the branch, e.g., "main")
+   - Download the artifact from that run
+
+   *Note:* the installer is built on every push to the repository. If you don't see artifacts,
+   the build may still be in progress — wait a moment and refresh.
+
+### Run the installer
+
+1. Double-click `notation_service-setup.exe`. Windows may say *"Windows protected your PC"* —
+   this is because the installer is not signed. Click **More info**, then **Run anyway**.
    <!-- screenshot: SmartScreen dialog with "More info" and "Run anyway" -->
-3. Follow the installer. It does not need an administrator password. Tick *Create a desktop
+2. Follow the installer. It does not need an administrator password. Tick *Create a desktop
    shortcut* if you want an icon on the desktop.
 
 ## Use
